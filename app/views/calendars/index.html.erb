@@ -13,6 +13,7 @@
       <div class='item'>
         <div class='date'>
           <%= day[:month] %>/<%= day[:date] %> <%# =抜け %>
+          <%= day[:wday]%> <%# Issue6 %>
         </div>
         <ul class='content'>
         <% if day[:plans].length != 0 %>
