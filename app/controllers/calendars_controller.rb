@@ -14,8 +14,10 @@ class CalendarsController < ApplicationController
 
   private
 
-  def plan_params
-    params.require(:calendars).permit(:date, :plan)
+  def plan_params #これが問題
+    # binding.pry
+    # params.require(:calendars).permit(:date, :plan)
+    params.require(:plan).permit(:date, :plan)
   end
 
   def get_week #Issue2
@@ -34,9 +36,16 @@ class CalendarsController < ApplicationController
       plans.each do |plan|
         today_plans.push(plan.plan) if plan.date == @todays_date + x
       end
-      days = { month:(@todays_date + x).month, date:(@todays_date+x).day, plans:today_plans} #Issue1
+
+      # weak_day = wdays[ (@todays_date + x).wday ] #Issue6 ※「date = today + x」「week_day = wdays[date.wday]」でも可
+      wday_num = @todays_date.wday + x # wdayメソッドを用いて取得した数値 #Issue6 
+      if wday_num >= 7 #「wday_numが7以上の場合」という条件式 #Issue6 
+        wday_num = wday_num - 7 #Issue6 
+      end #Issue6 
+      weak_day = wdays[wday_num] #Issue6 
+
+      days = { month:(@todays_date + x).month, date:(@todays_date+x).day, plans:today_plans, wday: weak_day} #Issue1 #Issue6
       @week_days.push(days)
     end
-
   end
 end
